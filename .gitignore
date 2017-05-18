@@ -1,5 +1,6 @@
 .idea/
-.mvn/target/
+.mvn/
+target/
 free.iml
 mvnw
 mvnw.cmd
