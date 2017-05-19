@@ -13,9 +13,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-import java.util.Map;
+
 
 /**
  * Created by wei.liu on 2017/3/3.
@@ -25,39 +26,53 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactoryPrimary",
         transactionManagerRef = "transactionManagerPrimary",
-        basePackages= {"com.rabbit.free.repository"}) //设置Repository所在位置
+        basePackages = {"com.rabbit.free.repository"}) //设置Repository所在位置
 public class PrimaryConfig {
-    @Autowired
-    @Qualifier("primaryDataSource")
-    private DataSource primaryDataSource;
+  /**
+   * primary datasource.
+   */
+  @Autowired
+  @Qualifier("primaryDataSource")
+  private DataSource primaryDataSource;
 
-    @Primary
-    @Bean(name = "entityManagerPrimary")
-    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
-        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
-    }
+  /**
+   * initialize primary EntityManager.
+   * @param builder EntityManagerFactoryBuilder
+   * @return EntityManager
+   */
+  @Primary
+  @Bean(name = "entityManagerPrimary")
+  public EntityManager entityManager(final EntityManagerFactoryBuilder builder) {
+    return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+  }
 
-    @Primary
-    @Bean(name = "entityManagerFactoryPrimary")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
-        return builder
-                .dataSource(primaryDataSource)
-                .properties(getVendorProperties(primaryDataSource))
-                .packages("com.rabbit.free.entity") //设置实体类所在位置
-                .persistenceUnit("primaryPersistenceUnit")
-                .build();
-    }
+  /**
+   * initialize LocalContainerEntityManagerFactoryBean.
+   * @param builder EntityManagerFactoryBuilder
+   * @return LocalContainerEntityManagerFactoryBean
+   */
+  @Primary
+  @Bean(name = "entityManagerFactoryPrimary")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary(
+          EntityManagerFactoryBuilder builder) {
+    return builder
+            .dataSource(primaryDataSource)
+            .properties(getVendorProperties(primaryDataSource))
+            .packages("com.rabbit.free.entity") //设置实体类所在位置
+            .persistenceUnit("primaryPersistenceUnit")
+            .build();
+  }
 
-    @Autowired
-    private JpaProperties jpaProperties;
+  @Autowired
+  private JpaProperties jpaProperties;
 
-    private Map<String, String> getVendorProperties(DataSource dataSource) {
-        return jpaProperties.getHibernateProperties(dataSource);
-    }
+  private Map<String, String> getVendorProperties(DataSource dataSource) {
+    return jpaProperties.getHibernateProperties(dataSource);
+  }
 
-    @Primary
-    @Bean(name = "transactionManagerPrimary")
-    public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
-        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
-    }
+  @Primary
+  @Bean(name = "transactionManagerPrimary")
+  public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
+    return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
+  }
 }

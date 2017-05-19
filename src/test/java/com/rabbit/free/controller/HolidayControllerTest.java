@@ -1,6 +1,6 @@
 package com.rabbit.free.controller;
 
-import com.rabbit.free.vo.HolidayVO;
+import com.rabbit.free.vo.HolidayVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +23,18 @@ public class HolidayControllerTest {
     @Test
     public void getHolidays() throws ParseException {
         Object object = holidayController.getHolidays("2017-01-01","2017-05-16");
-        List<HolidayVO> holidayVOList = (List<HolidayVO>)object;
-        holidayVOList.forEach(  holidayVO -> {
-            System.out.println(holidayVO);
+        List<HolidayVo> holidayVoList = (List<HolidayVo>)object;
+        holidayVoList.forEach(holidayVo -> {
+            System.out.println(holidayVo);
         });
     }
 
     @Test
     public void getFestivalHolidays() throws ParseException {
         Object object = holidayController.getFestivalHolidays("2017-01-01","2017-05-16");
-        List<HolidayVO> holidayVOList = (List<HolidayVO>)object;
-        holidayVOList.forEach(  holidayVO -> {
-            System.out.println(holidayVO);
+        List<HolidayVo> holidayVoList = (List<HolidayVo>)object;
+        holidayVoList.forEach(holidayVo -> {
+            System.out.println(holidayVo);
         });
     }
 }
